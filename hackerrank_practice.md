@@ -1,220 +1,577 @@
-# HackerRank Problem Solving (Basic) - Latihan
-
-## Info Tes
-
-| Detail | Info |
-|--------|------|
-| Durasi | 1 jam 30 menit |
-| Jumlah soal | 2 soal |
-| Topik | Array, String, Logic |
-| Level | Easy - Medium Easy |
-| Link | https://www.hackerrank.com/skills-verification/problem_solving_basic |
+# HackerRank Problem Solving (Basic) - Latihan Soal
 
 ---
 
-## Soal 1: Minimum Moves to Target
+## Soal 1: Minimum Difference
 
-### Soal
+**Soal:** Diberikan array angka, cari pasangan dua angka yang memiliki selisih paling kecil.
 
-Diberikan array of integers `nums` dan integer `target`. Setiap elemen dalam array bisa diubah ke integer lain dalam satu langkah. Tentukan jumlah minimum langkah yang diperlukan agar semua elemen dalam array sama dengan `target`.
-
-### Batasan
-
-- 1 ≤ nums.length ≤ 10⁵
-- 0 ≤ nums[i], target ≤ 10⁹
-
-### Contoh
-
-**Contoh 1:**
+**Input:**
 ```
-Input: nums = [1, 2, 3], target = 2
-Output: 2
-Penjelasan: Ubah nums[0] = 1 menjadi 2, dan nums[2] = 3 menjadi 2. Sekarang semua elemen adalah 2.
+[1, 5, 3, 19, 18, 25]
 ```
 
-**Contoh 2:**
+**Output:**
 ```
-Input: nums = [5, 5, 5], target = 5
-Output: 0
-Penjelasan: Semua elemen sudah sama dengan target.
+1  (antara 18 dan 19)
 ```
 
-**Contoh 3:**
-```
-Input: nums = [1, 1, 1, 1, 10], target = 1
-Output: 1
-Penjelasan: Hanya ubah nums[4] = 10 menjadi 1.
-```
-
-### Solusi
-
-**Pendekatan:** Hitung berapa banyak elemen yang TIDAK sama dengan target. Itu adalah jumlah minimum langkah.
-
-**Time Complexity:** O(n)
-**Space Complexity:** O(1)
-
+**Solusi:**
 ```python
-def min_moves(nums, target):
-    moves = 0
-    for num in nums:
-        if num != target:
-            moves += 1
-    return moves
+def minimumDifference(arr):
+    arr.sort()
+    min_diff = float('inf')
+    for i in range(1, len(arr)):
+        diff = arr[i] - arr[i-1]
+        if diff < min_diff:
+            min_diff = diff
+    return min_diff
 
-# Alternatif (lebih pendek):
-def min_moves(nums, target):
-    return sum(1 for num in nums if num != target)
+arr = list(map(int, input().split()))
+print(minimumDifference(arr))
 ```
 
-### Test Cases
+**Penjelasan:**
+1. Sort array → angka berurutan
+2. Iterasi, hitung selisih tiap pasangan bertetangga
+3. Simpan selisih terkecil
 
-```python
-assert min_moves([1, 2, 3], 2) == 2
-assert min_moves([5, 5, 5], 5) == 0
-assert min_moves([1, 1, 1, 1, 10], 1) == 1
-assert min_moves([], 1) == 0
-assert min_moves([7], 7) == 0
-assert min_moves([0], 1) == 1
-```
-
-### Penting untuk Diperhatikan
-
-- Kasus array kosong → return 0
-- Kasus semua elemen sudah target → return 0
-- Kasus hanya 1 elemen → cek apakah sama dengan target
+**Kompleksitas:** O(n log n) karena sorting
 
 ---
 
-## Soal 2: Count Pairs with Difference
+## Soal 2: Two Sum
 
-### Soal
+**Soal:** Diberikan array dan target, cari dua angka yang jumlahnya sama dengan target. Return index keduanya.
 
-Diberikan array of integers `nums` dan integer `k`. Hitung jumlah pasangan (i, j) dimana i < j dan |nums[i] - nums[j]| = k.
-
-### Batasan
-
-- 1 ≤ nums.length ≤ 10⁵
-- 0 ≤ k ≤ 10⁹
-
-### Contoh
-
-**Contoh 1:**
+**Input:**
 ```
-Input: nums = [1, 5, 3, 4, 2], k = 2
-Output: 3
-Penjelasan: Pasangan dengan beda 2: (1,3), (3,5), (2,4)
+[2, 7, 11, 15]
+target = 9
 ```
 
-**Contoh 2:**
+**Output:**
 ```
-Input: nums = [1, 1, 1, 1], k = 0
-Output: 6
-Penjelasan: Pasangan dengan beda 0: (0,1), (0,2), (0,3), (1,2), (1,3), (2,3) = 6 pasangan
+0 1  (karena 2 + 7 = 9)
 ```
 
-**Contoh 3:**
-```
-Input: nums = [1, 3, 5, 7, 9], k = 2
-Output: 4
-Penjelasan: Pasangan dengan beda 2: (1,3), (3,5), (5,7), (7,9)
-```
-
-### Solusi
-
-**Pendekatan:** Gunakan dictionary untuk menghitung frekuensi. Untuk setiap angka, cek apakah `num + k` ada di dictionary.
-
-**Time Complexity:** O(n)
-**Space Complexity:** O(n)
-
+**Solusi:**
 ```python
-def count_pairs(nums, k):
-    from collections import Counter
-    freq = Counter(nums)
+def twoSum(nums, target):
+    seen = {}
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in seen:
+            return [seen[complement], i]
+        seen[num] = i
+    return []
+
+nums = list(map(int, input().split()))
+target = int(input())
+print(*twoSum(nums, target))
+```
+
+**Penjelasan:**
+1. Iterasi array, simpan angka yang sudah dilihat di dictionary
+2. Cari complement (target - num) di dictionary
+3. Kalo ketemu, return index keduanya
+
+**Kompleksitas:** O(n) — satu pass
+
+---
+
+## Soal 3: Reverse Words in String
+
+**Soal:** Balik urutan kata dalam string tanpa membalik karakter.
+
+**Input:**
+```
+"the sky is blue"
+```
+
+**Output:**
+```
+"blue is sky the"
+```
+
+**Solusi:**
+```python
+def reverseWords(s):
+    words = s.split()
+    return ' '.join(reversed(words))
+
+s = input().strip()
+print(reverseWords(s))
+```
+
+**Penjelasan:**
+1. Split string jadi list kata
+2. Reverse list
+3. Join kembali dengan spasi
+
+**Kompleksitas:** O(n)
+
+---
+
+## Soal 4: Valid Palindrome
+
+**Soal:** Cek apakah string palindrome (dibaca sama dari depan dan belakang). Abaikan spasi, tanda baca, dan huruf besar/kecil.
+
+**Input:**
+```
+"A man, a plan, a canal: Panama"
+```
+
+**Output:**
+```
+True
+```
+
+**Solusi:**
+```python
+def isPalindrome(s):
+    cleaned = ''.join(c.lower() for c in s if c.isalnum())
+    return cleaned == cleaned[::-1]
+
+s = input().strip()
+print(isPalindrome(s))
+```
+
+**Penjelasan:**
+1. Hapus semua karakter non-alphanumeric
+2. Ubah ke lowercase
+3. Bandingkan dengan versi terbaliknya
+
+**Kompleksitas:** O(n)
+
+---
+
+## Soal 5: Maximum Subarray Sum
+
+**Soal:** Cari jumlah maksimum dari subarray kontigu.
+
+**Input:**
+```
+[-2, 1, -3, 4, -1, 2, 1, -5, 4]
+```
+
+**Output:**
+```
+6  (subarray [4, -1, 2, 1])
+```
+
+**Solusi:**
+```python
+def maxSubarraySum(arr):
+    max_sum = arr[0]
+    current_sum = arr[0]
+    for i in range(1, len(arr)):
+        current_sum = max(arr[i], current_sum + arr[i])
+        max_sum = max(max_sum, current_sum)
+    return max_sum
+
+arr = list(map(int, input().split()))
+print(maxSubarraySum(arr))
+```
+
+**Penjelasan (Kadane's Algorithm):**
+1. Iterasi array, simpan jumlah sementara
+2. Di tiap langkah, pilih: mulai baru atau lanjut yang lama
+3. Update jumlah maksimum
+
+**Kompleksitas:** O(n)
+
+---
+
+## Soal 6: Count Occurrences
+
+**Soal:** Hitung berapa kali angka tertentu muncul dalam array.
+
+**Input:**
+```
+[1, 2, 3, 2, 2, 4, 5]
+target = 2
+```
+
+**Output:**
+```
+3
+```
+
+**Solusi:**
+```python
+def countOccurrences(arr, target):
     count = 0
-    
-    if k == 0:
-        # Hitung pasangan angka yang sama
-        for num, cnt in freq.items():
-            count += cnt * (cnt - 1) // 2
-    else:
-        for num in freq:
-            if num + k in freq:
-                count += freq[num] * freq[num + k]
-    
+    for num in arr:
+        if num == target:
+            count += 1
     return count
+
+arr = list(map(int, input().split()))
+target = int(input())
+print(countOccurrences(arr, target))
 ```
 
-### Test Cases
+**Penjelasan:**
+1. Iterasi array
+2. Kalo angka == target, tambah counter
+3. Return counter
 
+**Kompleksitas:** O(n)
+
+---
+
+## Soal 7: Remove Duplicates
+
+**Soal:** Hapus duplikat dari array, pertahankan urutan pertama kali muncul.
+
+**Input:**
+```
+[1, 2, 2, 3, 4, 4, 5]
+```
+
+**Output:**
+```
+[1, 2, 3, 4, 5]
+```
+
+**Solusi:**
 ```python
-assert count_pairs([1, 5, 3, 4, 2], 2) == 3
-assert count_pairs([1, 1, 1, 1], 0) == 6
-assert count_pairs([1, 3, 5, 7, 9], 2) == 4
-assert count_pairs([1, 2, 3, 4, 5], 1) == 4
-assert count_pairs([1], 1) == 0
+def removeDuplicates(arr):
+    seen = set()
+    result = []
+    for num in arr:
+        if num not in seen:
+            seen.add(num)
+            result.append(num)
+    return result
+
+arr = list(map(int, input().split()))
+print(removeDuplicates(arr))
 ```
 
-### Penting untuk Diperhatikan
+**Penjelasan:**
+1. Pakai set untuk tracking angka yang sudah dilihat
+2. Kalo belum ada di set, tambah ke result
 
-- Kasus k = 0 → hitung pasangan angka yang sama (bukan satu angka dengan dirinya sendiri)
-- Kasus array 1 elemen → return 0
-- Perhatikan bahwa (i, j) dan (j, i) dihitung sebagai pasangan yang SAMA (karena i < j)
-
----
-
-## Tips Mengerjakan di HackerRank
-
-### Sebelum Mulai
-
-1. Baca soal dengan teliti — pahami input/output format
-2. Catat batasan (constraints) — menentukan kompleksitas yang dibutuhkan
-3. Tulis test cases manual dulu — termasuk edge cases
-
-### Saat Mengerjakan
-
-1. Mulai dari brute force — baru optimasi kalo perlu
-2. Test dengan contoh di soal dulu — pasti bener
-3. Cek edge cases — array kosong, 1 elemen, semua sama
-4. Jangan overthinking — soal basic, solusi sederhana cukup
-
-### Setelah Selesai
-
-1. Submit awal — partial score lebih baik daripada timeout
-2. Kalo stuck, skip ke soal lain — waktunya cukup (90 menit buat 2 soal)
+**Kompleksitas:** O(n)
 
 ---
 
-## Latihan Tambahan (Free)
+## Soal 8: Find Missing Number
 
-- HackerRank: https://www.hackerrank.com/domains/algorithms
-- LeetCode Easy: https://leetcode.com/problemset/?difficulty=Easy
-- Codeforces Div 2 A: https://codeforces.com/contests
+**Soal:** Diberikan array berisi angka 1 sampai N dengan satu angka hilang. Cari angka yang hilang.
+
+**Input:**
+```
+[1, 2, 4, 5, 6]
+```
+
+**Output:**
+```
+3
+```
+
+**Solusi:**
+```python
+def findMissingNumber(arr, n):
+    expected_sum = n * (n + 1) // 2
+    actual_sum = sum(arr)
+    return expected_sum - actual_sum
+
+arr = list(map(int, input().split()))
+n = int(input())
+print(findMissingNumber(arr, n))
+```
+
+**Penjelasan:**
+1. Hitung jumlah yang seharusnya (rumus deret aritmatika)
+2. Hitung jumlah aktual
+3. Selisihnya = angka yang hilang
+
+**Kompleksitas:** O(n)
 
 ---
 
-## Cheat Sheet
+## Soal 9: Is Anagram
 
-### Pola Umum Soal Basic
+**Soal:** Cek apakah dua string adalah anagram (huruf yang sama, urutan beda).
 
-| Pola | Solusi |
-|------|--------|
-| Cari angka yang hilang | XOR atau sum difference |
-| Hitung frekuensi | Dictionary/hash map |
-| Palindrom | Two pointer dari ujung |
-| Two Sum | Dictionary (simpan sisa kebutuhan) |
-| Valid parenthesis | Stack |
-| Reverse string | Two pointer atau slicing |
+**Input:**
+```
+listen
+silent
+```
 
-### Kompleksitas yang Dibutuhkan
+**Output:**
+```
+True
+```
 
-| Constraints | Kompleksitas |
-|-------------|-------------|
-| n ≤ 10 | O(n!) atau O(2^n) |
-| n ≤ 100 | O(n³) |
-| n ≤ 1000 | O(n²) |
-| n ≤ 10⁵ | O(n log n) |
-| n ≤ 10⁶ | O(n) |
+**Solusi:**
+```python
+def isAnagram(s1, s2):
+    s1 = s1.lower()
+    s2 = s2.lower()
+    if len(s1) != len(s2):
+        return False
+    return sorted(s1) == sorted(s2)
+
+s1 = input().strip()
+s2 = input().strip()
+print(isAnagram(s1, s2))
+```
+
+**Penjelasan:**
+1. Ubah ke lowercase
+2. Kalo panjang beda, langsung False
+3. Sort kedua string, bandingkan
+
+**Kompleksitas:** O(n log n)
 
 ---
 
-Good luck! 🔥
+## Soal 10: Fibonacci
+
+**Soal:** Return angka ke-N dari deret Fibonacci.
+
+**Input:**
+```
+6
+```
+
+**Output:**
+```
+8  (0, 1, 1, 2, 3, 5, 8)
+```
+
+**Solusi:**
+```python
+def fibonacci(n):
+    if n <= 1:
+        return n
+    a, b = 0, 1
+    for _ in range(2, n + 1):
+        a, b = b, a + b
+    return b
+
+n = int(input())
+print(fibonacci(n))
+```
+
+**Penjelasan:**
+1. Base case: F(0)=0, F(1)=1
+2. Iterasi dari 2 sampai n
+3. Update: a jadi b, b jadi a+b
+
+**Kompleksitas:** O(n)
+
+---
+
+## Soal 11: Sum of Two Arrays
+
+**Soal:** Dua array berisi digit angka. Hitung jumlahnya dan return sebagai array digit.
+
+**Input:**
+```
+[1, 2, 3]
+[4, 5, 6]
+```
+
+**Output:**
+```
+[5, 7, 9]
+```
+
+**Solusi:**
+```python
+def sumArrays(a, b):
+    result = []
+    carry = 0
+    i, j = len(a) - 1, len(b) - 1
+    while i >= 0 or j >= 0 or carry:
+        val = carry
+        if i >= 0:
+            val += a[i]
+            i -= 1
+        if j >= 0:
+            val += b[j]
+            j -= 1
+        result.append(val % 10)
+        carry = val // 10
+    return result[::-1]
+
+a = list(map(int, input().split()))
+b = list(map(int, input().split()))
+print(sumArrays(a, b))
+```
+
+**Penjelasan:**
+1. Iterasi dari belakang (digit paling kecil)
+2. Jumlahkan digit + carry
+3. Simpan sisa bagi 10, carry = bagi 10
+
+**Kompleksitas:** O(max(m, n))
+
+---
+
+## Soal 12: Longest Common Prefix
+
+**Soal:** Cari prefix terpanjang yang sama dari beberapa string.
+
+**Input:**
+```
+flower, flow, flight
+```
+
+**Output:**
+```
+"fl"
+```
+
+**Solusi:**
+```python
+def longestCommonPrefix(strs):
+    if not strs:
+        return ""
+    prefix = strs[0]
+    for s in strs[1:]:
+        while not s.startswith(prefix):
+            prefix = prefix[:-1]
+            if not prefix:
+                return ""
+    return prefix
+
+strs = input().split(',')
+print(longestCommonPrefix(strs))
+```
+
+**Penjelasan:**
+1. Ambil string pertama sebagai prefix awal
+2. Bandingkan dengan string lain
+3. Potong prefix kalo gak match
+
+**Kompleksitas:** O(S) — total karakter semua string
+
+---
+
+## Soal 13: Move Zeroes
+
+**Soal:** Pindahkan semua angka 0 ke akhir array tanpa mengubah urutan angka non-nol.
+
+**Input:**
+```
+[0, 1, 0, 3, 12]
+```
+
+**Output:**
+```
+[1, 3, 12, 0, 0]
+```
+
+**Solusi:**
+```python
+def moveZeroes(arr):
+    insert_pos = 0
+    for num in arr:
+        if num != 0:
+            arr[insert_pos] = num
+            insert_pos += 1
+    while insert_pos < len(arr):
+        arr[insert_pos] = 0
+        insert_pos += 1
+    return arr
+
+arr = list(map(int, input().split()))
+print(moveZeroes(arr))
+```
+
+**Penjelasan:**
+1. Iterasi array, simpan angka non-nol di depan
+2. Isi sisa dengan 0
+
+**Kompleksitas:** O(n)
+
+---
+
+## Soal 14: Find Duplicate
+
+**Soal:** Cari angka yang muncul lebih dari sekali dalam array.
+
+**Input:**
+```
+[1, 3, 4, 2, 2]
+```
+
+**Output:**
+```
+2
+```
+
+**Solusi:**
+```python
+def findDuplicate(arr):
+    seen = set()
+    for num in arr:
+        if num in seen:
+            return num
+        seen.add(num)
+    return -1
+
+arr = list(map(int, input().split()))
+print(findDuplicate(arr))
+```
+
+**Penjelasan:**
+1. Iterasi array, simpan angka di set
+2. Kalo sudah ada di set, itu duplikat
+
+**Kompleksitas:** O(n)
+
+---
+
+## Soal 15: Binary Search
+
+**Soal:** Cari posisi angka dalam array yang sudah terurut. Return -1 jika tidak ditemukan.
+
+**Input:**
+```
+[2, 5, 8, 12, 16, 23, 38, 56, 72, 91]
+target = 23
+```
+
+**Output:**
+```
+5
+```
+
+**Solusi:**
+```python
+def binarySearch(arr, target):
+    left, right = 0, len(arr) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return -1
+
+arr = list(map(int, input().split()))
+target = int(input())
+print(binarySearch(arr, target))
+```
+
+**Penjelasan:**
+1. Ambil tengah array
+2. Kalo target == tengah, selesai
+3. Kalo target > tengah, cari di kanan
+4. Kalo target < tengah, cari di kiri
+
+**Kompleksitas:** O(log n)
+
+---
+
+**Total: 15 soal dengan solusi dan penjelasan**
